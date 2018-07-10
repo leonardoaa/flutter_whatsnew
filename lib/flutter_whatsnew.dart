@@ -58,6 +58,10 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
     super.initState();
     isLoading = true;
     if (widget.showNow != null && widget.showNow) {
+      setState(() {
+        showHomePage = false;
+        isLoading = false;
+      });
     } else {
       if (widget.showOnVersionChange != null && widget.showOnVersionChange)
         _showOnVersionChange(context);

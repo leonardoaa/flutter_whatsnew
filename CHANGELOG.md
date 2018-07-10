@@ -1,3 +1,7 @@
+## [0.0.4] - Bug Fixes
+
+* Fixed Loading Bug.
+
 ## [0.0.3] - Bug Fixes
 
 * Updating Startup Behavior.
