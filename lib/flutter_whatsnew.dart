@@ -56,6 +56,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
   @override
   initState() {
     super.initState();
+    isLoading = true;
     if (widget.showNow != null && widget.showNow) {
     } else {
       if (widget.showOnVersionChange != null && widget.showOnVersionChange)
@@ -72,64 +73,80 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
     if (!_lastVersion.contains(_projectVersion)) {
       prefs.setString('lastVersion', _projectVersion);
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => widget.home),
-      );
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => widget.home),
+      // );
+      setState(() {
+        isLoading = false;
+        showHomePage = true;
+      });
     }
   }
 
+  bool showHomePage = false;
+  bool isLoading = true;
+
   @override
   Widget build(BuildContext context) {
-    return (Scaffold(
-        body: SafeArea(
-      child: Stack(
-        fit: StackFit.loose,
-        children: <Widget>[
-          Positioned(
-            top: 10.0,
-            left: 0.0,
-            right: 0.0,
-            child: widget.title,
-          ),
-          Positioned(
-            left: 0.0,
-            right: 0.0,
-            top: 50.0,
-            bottom: 80.0,
-            child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: ListBody(
-                  children: widget.items
-                      .map(
-                        (ListTile item) => ListTile(
-                              title: item.title,
-                              subtitle: item.subtitle,
-                              leading: item.leading,
-                              trailing: item.trailing,
-                              onTap: item.onTap,
-                              onLongPress: item.onLongPress,
-                            ),
-                      )
-                      .toList()),
-            ),
-          ),
-          Positioned(
-              bottom: 5.0,
-              right: 10.0,
-              left: 10.0,
-              child: NativeButton(
-                child: widget.buttonText,
-                buttonColor: Colors.blue,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => widget.home),
-                  );
-                },
-              )),
-        ],
-      ),
-    )));
+    return showHomePage
+        ? widget.home
+        : isLoading
+            ? Scaffold(
+                body: Center(
+                  child: NativeLoadingIndicator(),
+                ),
+              )
+            : (Scaffold(
+                body: SafeArea(
+                child: Stack(
+                  fit: StackFit.loose,
+                  children: <Widget>[
+                    Positioned(
+                      top: 10.0,
+                      left: 0.0,
+                      right: 0.0,
+                      child: widget.title,
+                    ),
+                    Positioned(
+                      left: 0.0,
+                      right: 0.0,
+                      top: 50.0,
+                      bottom: 80.0,
+                      child: SingleChildScrollView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        child: ListBody(
+                            children: widget.items
+                                .map(
+                                  (ListTile item) => ListTile(
+                                        title: item.title,
+                                        subtitle: item.subtitle,
+                                        leading: item.leading,
+                                        trailing: item.trailing,
+                                        onTap: item.onTap,
+                                        onLongPress: item.onLongPress,
+                                      ),
+                                )
+                                .toList()),
+                      ),
+                    ),
+                    Positioned(
+                        bottom: 5.0,
+                        right: 10.0,
+                        left: 10.0,
+                        child: NativeButton(
+                          child: widget.buttonText,
+                          buttonColor: Colors.blue,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => widget.home),
+                            );
+                          },
+                        )),
+                  ],
+                ),
+              )));
   }
 }
