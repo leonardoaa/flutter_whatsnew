@@ -10,7 +10,7 @@ To use this plugin, add `flutter_whatsnew` as a [dependency in your pubspec.yaml
 
 ``` dart
 // Import package
-import 'package:native_widgets/native_widgets.dart';
+import 'package:flutter_whatsnew/flutter_whatsnew.dart';
 ```
 
 
