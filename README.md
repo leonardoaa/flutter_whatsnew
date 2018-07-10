@@ -1,12 +1,18 @@
 # flutter_whatsnew
 
-A new Flutter package to show updates to users.
+[![pub package](https://img.shields.io/pub/v/flutter_whatsnew.svg)](https://pub.dartlang.org/packages/flutter_whatsnew)
 
-## Getting Started
+A Flutter Plugin to Show a Whats New page. Complete with only showing on version change.
 
-For help getting started with Flutter, view our online [documentation](https://flutter.io/).
+## Usage
 
-For help on editing package code, view the [documentation](https://flutter.io/developing-packages/).
+To use this plugin, add `flutter_whatsnew` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
+
+``` dart
+// Import package
+import 'package:native_widgets/native_widgets.dart';
+```
+
 
 <p align="center"><img src ="example.png" width="300px"/></p>
 
