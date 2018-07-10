@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:io';
-import 'dart:async';
-import 'package:native_widgets/native_widgets.dart';
 import 'package:flutter_whatsnew/flutter_whatsnew.dart';
 
 class ShowWhatsNew extends StatefulWidget {
@@ -24,7 +21,7 @@ class ShowWhatsNew extends StatefulWidget {
 }
 
 class _ShowWhatsNewState extends State<ShowWhatsNew> {
-  
+
   final double textScaleFactor = 1.0;
 
   @override
@@ -200,8 +197,8 @@ class _HomePageState extends State<HomePage> {
           child: SafeArea(
         child: ListBody(
           children: <Widget>[
-            Container(
-              height: 10.0,
+            Text(
+             'Home Page',
             ),
           ],
         ),
