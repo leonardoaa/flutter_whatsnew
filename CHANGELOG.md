@@ -1,3 +1,7 @@
+## [0.0.3] - Bug Fixes
+
+* Updating Startup Behavior.
+
 ## [0.0.2] - Bug Fixes
 
 * Updating Startup Behavior.

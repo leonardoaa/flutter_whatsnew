@@ -72,16 +72,13 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
 
     if (!_lastVersion.contains(_projectVersion)) {
       prefs.setString('lastVersion', _projectVersion);
+      showHomePage = false;
     } else {
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => widget.home),
-      // );
-      setState(() {
-        isLoading = false;
-        showHomePage = true;
-      });
+      showHomePage = true;
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   bool showHomePage = false;
