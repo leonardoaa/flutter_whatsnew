@@ -1,0 +1,135 @@
+library flutter_whatsnew;
+
+import 'package:flutter/material.dart';
+import 'package:native_widgets/native_widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get_version/get_version.dart';
+import 'dart:async';
+
+class WhatsNewPage extends StatefulWidget {
+  final Widget title;
+  final Widget buttonText;
+  final List<ListTile> items;
+  final bool showNow;
+  final bool showOnVersionChange;
+  final Widget home;
+
+  WhatsNewPage(
+      {@required this.items,
+      @required this.title,
+      @required this.buttonText,
+      @required this.home,
+      this.showNow,
+      this.showOnVersionChange});
+
+  static Future<Null> showDetailPopUp(
+      BuildContext context, String title, String detail) async {
+    void showDemoDialog<T>({BuildContext context, Widget child}) {
+      showDialog<T>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => child,
+      );
+    }
+
+    return showDemoDialog<Null>(
+        context: context,
+        child: NativeDialog(
+          title: title,
+          content: detail,
+          actions: <NativeDialogAction>[
+            NativeDialogAction(
+                text: 'OK',
+                isDestructive: false,
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+          ],
+        ));
+  }
+
+  @override
+  _WhatsNewPageState createState() => _WhatsNewPageState();
+}
+
+class _WhatsNewPageState extends State<WhatsNewPage> {
+  @override
+  initState() {
+    super.initState();
+    if (widget.showNow != null && widget.showNow) {
+    } else {
+      if (widget.showOnVersionChange != null && widget.showOnVersionChange)
+        _showOnVersionChange(context);
+    }
+  }
+
+  Future _showOnVersionChange(BuildContext context) async {
+    var prefs = await SharedPreferences.getInstance();
+    String _lastVersion = prefs.getString('lastVersion');
+    _lastVersion == null ? _lastVersion = "" : _lastVersion = _lastVersion;
+    String _projectVersion = await GetVersion.projectVersion;
+
+    if (!_lastVersion.contains(_projectVersion)) {
+      prefs.setString('lastVersion', _projectVersion);
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => widget.home),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return (Scaffold(
+        body: SafeArea(
+      child: Stack(
+        fit: StackFit.loose,
+        children: <Widget>[
+          Positioned(
+            top: 10.0,
+            left: 0.0,
+            right: 0.0,
+            child: widget.title,
+          ),
+          Positioned(
+            left: 0.0,
+            right: 0.0,
+            top: 50.0,
+            bottom: 80.0,
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: ListBody(
+                  children: widget.items
+                      .map(
+                        (ListTile item) => ListTile(
+                              title: item.title,
+                              subtitle: item.subtitle,
+                              leading: item.leading,
+                              trailing: item.trailing,
+                              onTap: item.onTap,
+                              onLongPress: item.onLongPress,
+                            ),
+                      )
+                      .toList()),
+            ),
+          ),
+          Positioned(
+              bottom: 5.0,
+              right: 10.0,
+              left: 10.0,
+              child: NativeButton(
+                child: widget.buttonText,
+                buttonColor: Colors.blue,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => widget.home),
+                  );
+                },
+              )),
+        ],
+      ),
+    )));
+  }
+}
