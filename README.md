@@ -19,7 +19,7 @@ import 'package:native_widgets/native_widgets.dart';
 
 ## Example
 
-```
+``` dart
 WhatsNewPage(
     title: Text(
     "What's New",
