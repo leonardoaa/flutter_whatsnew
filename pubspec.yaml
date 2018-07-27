@@ -1,6 +1,6 @@
 name: flutter_whatsnew
 description: A new Flutter package to show updates to users.
-version: 0.0.5
+version: 0.0.5+1
 author: Rody Davis <rody.davis.jr@gmail.com>
 homepage: https://github.com/AppleEducate/flutter_whatsnew
 environment:
@@ -9,7 +9,7 @@ environment:
 
 
 dependencies:
-  native_widgets: ^0.1.0
+  native_widgets: ^0.1.1
   get_version: ^0.0.4
   shared_preferences: ^0.4.0
   flutter:
