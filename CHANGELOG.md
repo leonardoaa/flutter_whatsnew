@@ -1,3 +1,8 @@
+## [0.0.5] - Updating for Flutter
+
+* Increased button width on android.
+* Updated native_widgets 0.1.0
+
 ## [0.0.4] - Bug Fixes
 
 * Fixed Loading Bug.

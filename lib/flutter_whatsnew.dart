@@ -22,7 +22,7 @@ class WhatsNewPage extends StatefulWidget {
       this.showNow,
       this.showOnVersionChange});
 
-  static Future<Null> showDetailPopUp(
+  static void showDetailPopUp(
       BuildContext context, String title, String detail) async {
     void showDemoDialog<T>({BuildContext context, Widget child}) {
       showDialog<T>(
@@ -94,9 +94,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
         ? widget.home
         : isLoading
             ? Scaffold(
-                body: Center(
-                  child: NativeLoadingIndicator(),
-                ),
+                body: NativeLoadingIndicator(),
               )
             : (Scaffold(
                 body: SafeArea(
@@ -136,6 +134,7 @@ class _WhatsNewPageState extends State<WhatsNewPage> {
                         right: 10.0,
                         left: 10.0,
                         child: NativeButton(
+                          minWidthAndroid: 100.0,
                           child: widget.buttonText,
                           buttonColor: Colors.blue,
                           onPressed: () {
