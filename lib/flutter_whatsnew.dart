@@ -1,26 +1,41 @@
 library flutter_whatsnew;
 
-import 'package:flutter/material.dart';
-import 'package:native_widgets/native_widgets.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:get_version/get_version.dart';
-import 'dart:async';
+import 'dart:io';
 
-class WhatsNewPage extends StatefulWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:native_widgets/native_widgets.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+
+class WhatsNewPage extends StatelessWidget {
   final Widget title;
   final Widget buttonText;
   final List<ListTile> items;
-  final bool showNow;
-  final bool showOnVersionChange;
-  final Widget home;
+  final VoidCallback onButtonPressed;
+  final bool changelog;
+  final String changes;
+  final Color backgroundColor;
+  final Color buttonColor;
 
-  WhatsNewPage(
-      {@required this.items,
-      @required this.title,
-      @required this.buttonText,
-      @required this.home,
-      this.showNow,
-      this.showOnVersionChange});
+  const WhatsNewPage({
+    @required this.items,
+    @required this.title,
+    @required this.buttonText,
+    this.onButtonPressed,
+    this.backgroundColor,
+    this.buttonColor,
+  })  : changelog = false,
+        changes = null;
+
+  const WhatsNewPage.changelog({
+    @required this.title,
+    @required this.buttonText,
+    this.onButtonPressed,
+    this.changes,
+    this.backgroundColor,
+    this.buttonColor,
+  })  : changelog = true,
+        items = null;
 
   static void showDetailPopUp(
       BuildContext context, String title, String detail) async {
@@ -33,120 +48,199 @@ class WhatsNewPage extends StatefulWidget {
     }
 
     return showDemoDialog<Null>(
-        context: context,
-        child: NativeDialog(
-          title: title,
-          content: detail,
-          actions: <NativeDialogAction>[
-            NativeDialogAction(
-                text: 'OK',
-                isDestructive: false,
-                onPressed: () {
-                  Navigator.pop(context);
-                }),
-          ],
-        ));
+      context: context,
+      child: NativeDialog(
+        title: Text(title),
+        content: Text(detail),
+        actions: <NativeDialogAction>[
+          NativeDialogAction(
+            text: Text('OK'),
+            isDestructive: false,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
   }
-
-  @override
-  _WhatsNewPageState createState() => _WhatsNewPageState();
-}
-
-class _WhatsNewPageState extends State<WhatsNewPage> {
-  @override
-  initState() {
-    super.initState();
-    isLoading = true;
-    if (widget.showNow != null && widget.showNow) {
-      setState(() {
-        showHomePage = false;
-        isLoading = false;
-      });
-    } else {
-      if (widget.showOnVersionChange != null && widget.showOnVersionChange)
-        _showOnVersionChange(context);
-    }
-  }
-
-  Future _showOnVersionChange(BuildContext context) async {
-    var prefs = await SharedPreferences.getInstance();
-    String _lastVersion = prefs.getString('lastVersion');
-    _lastVersion == null ? _lastVersion = "" : _lastVersion = _lastVersion;
-    String _projectVersion = await GetVersion.projectVersion;
-
-    if (!_lastVersion.contains(_projectVersion)) {
-      prefs.setString('lastVersion', _projectVersion);
-      showHomePage = false;
-    } else {
-      showHomePage = true;
-    }
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  bool showHomePage = false;
-  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
-    return showHomePage
-        ? widget.home
-        : isLoading
-            ? Scaffold(
-                body: NativeLoadingIndicator(),
-              )
-            : (Scaffold(
-                body: SafeArea(
-                child: Stack(
-                  fit: StackFit.loose,
-                  children: <Widget>[
-                    Positioned(
-                      top: 10.0,
-                      left: 0.0,
-                      right: 0.0,
-                      child: widget.title,
-                    ),
-                    Positioned(
-                      left: 0.0,
-                      right: 0.0,
-                      top: 50.0,
-                      bottom: 80.0,
-                      child: SingleChildScrollView(
-                        physics: AlwaysScrollableScrollPhysics(),
-                        child: ListBody(
-                            children: widget.items
-                                .map(
-                                  (ListTile item) => ListTile(
-                                        title: item.title,
-                                        subtitle: item.subtitle,
-                                        leading: item.leading,
-                                        trailing: item.trailing,
-                                        onTap: item.onTap,
-                                        onLongPress: item.onLongPress,
-                                      ),
-                                )
-                                .toList()),
-                      ),
-                    ),
-                    Positioned(
-                        bottom: 5.0,
-                        right: 10.0,
-                        left: 10.0,
-                        child: NativeButton(
-                          minWidthAndroid: 100.0,
-                          child: widget.buttonText,
-                          buttonColor: Colors.blue,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => widget.home),
-                            );
-                          },
-                        )),
-                  ],
+    print("Changelog: $changelog");
+    if (Platform.isAndroid) {
+      return _buildIOS(context);
+    }
+
+    return _buildAndroid(context);
+  }
+
+  Widget _buildAndroid(BuildContext context) {
+    if (changelog) {
+      return Scaffold(
+        backgroundColor:
+            backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
+        body: SafeArea(
+          child: Stack(
+            fit: StackFit.loose,
+            children: <Widget>[
+              Positioned(
+                top: 10.0,
+                left: 0.0,
+                right: 0.0,
+                child: title,
+              ),
+              Positioned(
+                left: 0.0,
+                right: 0.0,
+                top: 50.0,
+                bottom: 80.0,
+                child: ChangeLogView(
+                  changes: changes,
                 ),
-              )));
+              ),
+              Positioned(
+                bottom: 5.0,
+                right: 10.0,
+                left: 10.0,
+                child: ListTile(
+                  title: NativeButton(
+                    child: buttonText,
+                    color: buttonColor ?? Colors.blue,
+                    onPressed: onButtonPressed != null
+                        ? onButtonPressed
+                        : () {
+                            Navigator.pop(context);
+                          },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    return Scaffold(
+      backgroundColor:
+          backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(
+        child: Stack(
+          fit: StackFit.loose,
+          children: <Widget>[
+            Positioned(
+              top: 10.0,
+              left: 0.0,
+              right: 0.0,
+              child: title,
+            ),
+            Positioned(
+              left: 0.0,
+              right: 0.0,
+              top: 50.0,
+              bottom: 80.0,
+              child: ListView(
+                children: items
+                    .map(
+                      (ListTile item) => ListTile(
+                            title: item.title,
+                            subtitle: item.subtitle,
+                            leading: item.leading,
+                            trailing: item.trailing,
+                            onTap: item.onTap,
+                            onLongPress: item.onLongPress,
+                          ),
+                    )
+                    .toList(),
+              ),
+            ),
+            Positioned(
+              bottom: 5.0,
+              right: 10.0,
+              left: 10.0,
+              child: ListTile(
+                title: NativeButton(
+                  child: buttonText,
+                  color: buttonColor ?? Colors.blue,
+                  onPressed: onButtonPressed != null
+                      ? onButtonPressed
+                      : () {
+                          Navigator.pop(context);
+                        },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIOS(BuildContext context) {
+    Widget child;
+    if (changelog) {
+      child = ChangeLogView(
+        changes: changes,
+      );
+    } else {
+      child = Material(
+        child: ListView(
+          children: items,
+        ),
+      );
+    }
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: title,
+        automaticallyImplyMiddle: false,
+        trailing: CupertinoButton(
+          child: buttonText,
+          onPressed: onButtonPressed != null
+              ? onButtonPressed
+              : () {
+                  Navigator.pop(context);
+                },
+        ),
+      ),
+      child: SafeArea(
+        child: child,
+      ),
+    );
+  }
+}
+
+class ChangeLogView extends StatefulWidget {
+  const ChangeLogView({this.changes});
+  final String changes;
+  @override
+  _ChangeLogViewState createState() => _ChangeLogViewState();
+}
+
+class _ChangeLogViewState extends State<ChangeLogView> {
+  String _changelog;
+
+  @override
+  void initState() {
+    if (widget?.changes == null) {
+      rootBundle.loadString("CHANGELOG.md").then((data) {
+        setState(() {
+          _changelog = data;
+        });
+      });
+    } else {
+      setState(() {
+        _changelog = widget.changes;
+      });
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_changelog == null) {
+      return NativeLoadingIndicator(
+        text: Text("Loading Changes..."),
+      );
+    }
+    return Markdown(data: _changelog);
   }
 }

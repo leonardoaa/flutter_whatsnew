@@ -1,35 +1,8 @@
-[![Buy Me A Coffee](https://img.shields.io/badge/Donate-Buy%20Me%20A%20Coffee-yellow.svg)](https://www.buymeacoffee.com/rodydavis)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WSH3GVC49GNNJ)
+# flutter_whatsnew_example
 
-# flutter_whatsnew
+Demonstrates how to use the flutter_whatsnew plugin.
 
-[![pub package](https://img.shields.io/pub/v/flutter_whatsnew.svg)](https://pub.dartlang.org/packages/flutter_whatsnew)
-
-A Flutter Plugin to Show a Whats New page.
-
-## Usage
-
-To use this plugin, add `flutter_whatsnew` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
-
-``` dart
-// Import package
-import 'package:flutter_whatsnew/flutter_whatsnew.dart';
-```
-
-![changelog](https://github.com/AppleEducate/plugins/blob/master/packages/flutter_whatsnew/screenshots/changes.png)
-
-If using `WhatsNewPage.changelog` and you want it to pickup the `CHANGELOG.md' add it to the Flutter asset directory, otherwise mannualy pass in the .md file with the changes. This uses the full markdown previewer.
-
-``` yaml
-  assets:
-    - CHANGELOG.md
-```
-
-![changelog](https://github.com/AppleEducate/plugins/blob/master/packages/flutter_whatsnew/screenshots/changelog.png)
-
-## Example
-
-``` dart
+```dart
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_whatsnew/flutter_whatsnew.dart';

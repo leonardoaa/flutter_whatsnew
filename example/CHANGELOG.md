@@ -1,15 +1,3 @@
-## 1.0.0
-
-* Addign Cupertino UI
-
-## 0.3.0 - 04.06.2019
-
-* Making Example Desktop Aware
-
-## 0.2.1 - 04.05.2019
-
-* `tb2761` Added Button Colors
-
 ## [0.2.0] - Breaking Changes
 
 * Updated Example
@@ -54,4 +42,3 @@
 ## [0.0.1] - Whats New Widget
 
 * Added Components, Version Check and Example.
-* Added `native_widgets`
