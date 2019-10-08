@@ -1,3 +1,12 @@
+## 1.0.2
+
+* Adding Path Option
+* Removing Native Widgets
+
+## 1.0.1
+
+* Bumping Version
+
 ## 1.0.0
 
 * Addign Cupertino UI

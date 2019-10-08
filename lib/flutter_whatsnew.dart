@@ -2,9 +2,9 @@ library flutter_whatsnew;
 
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:native_widgets/native_widgets.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class WhatsNewPage extends StatelessWidget {
@@ -16,6 +16,7 @@ class WhatsNewPage extends StatelessWidget {
   final String changes;
   final Color backgroundColor;
   final Color buttonColor;
+  final String path;
 
   const WhatsNewPage({
     @required this.items,
@@ -25,7 +26,8 @@ class WhatsNewPage extends StatelessWidget {
     this.backgroundColor,
     this.buttonColor,
   })  : changelog = false,
-        changes = null;
+        changes = null,
+        path = null;
 
   const WhatsNewPage.changelog({
     @required this.title,
@@ -34,6 +36,7 @@ class WhatsNewPage extends StatelessWidget {
     this.changes,
     this.backgroundColor,
     this.buttonColor,
+    this.path,
   })  : changelog = true,
         items = null;
 
@@ -49,13 +52,12 @@ class WhatsNewPage extends StatelessWidget {
 
     return showDemoDialog<Null>(
       context: context,
-      child: NativeDialog(
+      child: AlertDialog(
         title: Text(title),
         content: Text(detail),
-        actions: <NativeDialogAction>[
-          NativeDialogAction(
-            text: Text('OK'),
-            isDestructive: false,
+        actions: <Widget>[
+          FlatButton(
+            child: Text('OK'),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -95,16 +97,14 @@ class WhatsNewPage extends StatelessWidget {
                 right: 0.0,
                 top: 50.0,
                 bottom: 80.0,
-                child: ChangeLogView(
-                  changes: changes,
-                ),
+                child: ChangeLogView(changes: changes, path: path),
               ),
               Positioned(
                 bottom: 5.0,
                 right: 10.0,
                 left: 10.0,
                 child: ListTile(
-                  title: NativeButton(
+                  title: RaisedButton(
                     child: buttonText,
                     color: buttonColor ?? Colors.blue,
                     onPressed: onButtonPressed != null
@@ -142,13 +142,13 @@ class WhatsNewPage extends StatelessWidget {
                 children: items
                     .map(
                       (ListTile item) => ListTile(
-                            title: item.title,
-                            subtitle: item.subtitle,
-                            leading: item.leading,
-                            trailing: item.trailing,
-                            onTap: item.onTap,
-                            onLongPress: item.onLongPress,
-                          ),
+                        title: item.title,
+                        subtitle: item.subtitle,
+                        leading: item.leading,
+                        trailing: item.trailing,
+                        onTap: item.onTap,
+                        onLongPress: item.onLongPress,
+                      ),
                     )
                     .toList(),
               ),
@@ -158,14 +158,12 @@ class WhatsNewPage extends StatelessWidget {
               right: 10.0,
               left: 10.0,
               child: ListTile(
-                title: NativeButton(
+                title: RaisedButton(
                   child: buttonText,
                   color: buttonColor ?? Colors.blue,
                   onPressed: onButtonPressed != null
                       ? onButtonPressed
-                      : () {
-                          Navigator.pop(context);
-                        },
+                      : () => Navigator.pop(context),
                 ),
               ),
             ),
@@ -178,9 +176,7 @@ class WhatsNewPage extends StatelessWidget {
   Widget _buildIOS(BuildContext context) {
     Widget child;
     if (changelog) {
-      child = ChangeLogView(
-        changes: changes,
-      );
+      child = ChangeLogView(changes: changes, path: path);
     } else {
       child = Material(
         child: ListView(
@@ -209,8 +205,9 @@ class WhatsNewPage extends StatelessWidget {
 }
 
 class ChangeLogView extends StatefulWidget {
-  const ChangeLogView({this.changes});
+  const ChangeLogView({this.changes, this.path});
   final String changes;
+  final String path;
   @override
   _ChangeLogViewState createState() => _ChangeLogViewState();
 }
@@ -221,7 +218,7 @@ class _ChangeLogViewState extends State<ChangeLogView> {
   @override
   void initState() {
     if (widget?.changes == null) {
-      rootBundle.loadString("CHANGELOG.md").then((data) {
+      rootBundle.loadString(widget?.path ?? "CHANGELOG.md").then((data) {
         setState(() {
           _changelog = data;
         });
@@ -237,9 +234,7 @@ class _ChangeLogViewState extends State<ChangeLogView> {
   @override
   Widget build(BuildContext context) {
     if (_changelog == null) {
-      return NativeLoadingIndicator(
-        text: Text("Loading Changes..."),
-      );
+      return CircularProgressIndicator();
     }
     return Markdown(data: _changelog);
   }
