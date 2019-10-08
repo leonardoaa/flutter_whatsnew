@@ -18,7 +18,7 @@ To use this plugin, add `flutter_whatsnew` as a [dependency in your pubspec.yaml
 import 'package:flutter_whatsnew/flutter_whatsnew.dart';
 ```
 
-![changelog](https://github.com/fluttercommunity/flutter_whatsnew/blob/master/packages/flutter_whatsnew/doc/screenshots/changes.png)
+![changelog](https://github.com/fluttercommunity/flutter_whatsnew/blob/master/doc/screenshots/changes.png)
 
 If using `WhatsNewPage.changelog` and you want it to pickup the `CHANGELOG.md' add it to the Flutter asset directory, otherwise manually pass in the .md file with the changes. This uses the full markdown previewer.
 
@@ -27,7 +27,7 @@ If using `WhatsNewPage.changelog` and you want it to pickup the `CHANGELOG.md' a
     - CHANGELOG.md
 ```
 
-![changelog](https://github.com/fluttercommunity/flutter_whatsnew/blob/master/packages/flutter_whatsnew/doc/screenshots/changelog.png)
+![changelog](https://github.com/fluttercommunity/flutter_whatsnew/blob/master/doc/screenshots/changelog.png)
 
 ## Example
 
