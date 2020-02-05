@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Adding Web Support
+
 ## 1.0.2
 
 * Adding Path Option
