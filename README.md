@@ -9,6 +9,8 @@
 
 A Flutter Plugin to Show a Whats New page.
 
+Online Demo: https://fluttercommunity.github.io/flutter_whatsnew/
+
 ## Usage
 
 To use this plugin, add `flutter_whatsnew` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).

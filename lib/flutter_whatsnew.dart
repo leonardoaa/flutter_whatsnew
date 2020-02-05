@@ -3,6 +3,7 @@ library flutter_whatsnew;
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -70,7 +71,7 @@ class WhatsNewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("Changelog: $changelog");
-    if (Platform.isAndroid) {
+    if (!kIsWeb && Platform.isIOS) {
       return _buildIOS(context);
     }
 
