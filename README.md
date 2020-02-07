@@ -7,7 +7,7 @@
 
 [![pub package](https://img.shields.io/pub/v/flutter_whatsnew.svg)](https://pub.dartlang.org/packages/flutter_whatsnew)
 
-A Flutter Plugin to Show a Whats New page.
+A Flutter Plugin to Show a Whats New page. 
 
 Online Demo: https://fluttercommunity.github.io/flutter_whatsnew/
 
